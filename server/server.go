@@ -50,9 +50,24 @@ func (server *Server) migrateDatabase() {
 	err := server.DB.Debug().AutoMigrate(
 		&models.User{},
 		&models.Profile{},
+
+		&models.Brand{},
+		&models.ActualProduct{},
+		&models.VariantSelectorType{},
+		&models.ProductType{},
+		&models.Product{},
+		&models.VariantSelector{},
+		&models.ProductVariant{},
+
+		&models.CostType{},
+		&models.Cost{},
+		&models.Income{},
+		&models.ProductCost{},
+		&models.Invoice{},
+		&models.InvoiceItem{},
 	)
 	if err != nil {
-		log.Fatalln("error in db migration")
+		log.Fatalln("error in db migration:", err.Error())
 		return
 	}
 }
