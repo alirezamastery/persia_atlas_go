@@ -13,11 +13,11 @@ func init() {
 	boot.LoadEnvironmentVariables()
 }
 
-func Run() {
+func Start() {
 	rdb := redis.NewClient(&redis.Options{
 		Addr: "127.0.0.1:6379",
 	})
-	
+
 	wsCommands := commands.GetWsCommands()
 	wsHub := websocket.NewWsHub(wsCommands)
 	go wsHub.Run()

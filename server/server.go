@@ -9,8 +9,10 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"os"
+	"persia_atlas/server/controllers/brand"
 	"persia_atlas/server/controllers/user"
 	"persia_atlas/server/models"
+	"persia_atlas/server/services/brand"
 	"persia_atlas/server/websocket"
 )
 
@@ -84,6 +86,10 @@ func (server *Server) addMiddlewares() {
 func (server *Server) setupRoutes() {
 	websocket.RegisterRoutes(server.Router, server.DB, server.WsHub, server.RedisDB)
 	user.RegisterRoutes(server.Router, server.DB)
+
+	brandService := brandservice.NewBrandService(server.DB)
+	brandController := brandcontroller.NewBrandController(brandService, server.DB)
+	brandController.RegisterRoutes(server.Router)
 }
 
 func (server *Server) Initialize() {

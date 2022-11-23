@@ -34,6 +34,7 @@ var goodName validator.Func = func(fl validator.FieldLevel) bool {
 func (h handler) UpdateProfile() gin.HandlerFunc {
 	const profileImgDir = "profile"
 
+	// add custom validator
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		err := v.RegisterValidation("good-name", goodName, false)
 		if err != nil {
