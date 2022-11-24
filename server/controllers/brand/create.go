@@ -26,6 +26,6 @@ func (bc *BrandController) CreateBrand() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, &b)
+		c.JSON(http.StatusCreated, &b)
 	}
 }

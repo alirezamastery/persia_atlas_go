@@ -9,4 +9,6 @@ import (
 type BrandService interface {
 	CreateBrand(brand *models.Brand) error
 	GetBrandsPaginated(c *gin.Context) *pagination.PaginatedResponse
+	GetBrandById(id uint) *models.Brand
+	//UpdateBrand(id uint) *models.Brand
 }

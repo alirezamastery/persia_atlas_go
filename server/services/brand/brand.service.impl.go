@@ -39,3 +39,21 @@ func (bs *BrandServiceImpl) GetBrandsPaginated(c *gin.Context) *pagination.Pagin
 
 	return response
 }
+
+func (bs *BrandServiceImpl) GetBrandById(id uint) *models.Brand {
+	var brand models.Brand
+	bs.db.First(&brand, id)
+	if brand.ID == 0 {
+		return nil
+	}
+	return &brand
+}
+
+func (bs *BrandServiceImpl) UpdateBrand(b *models.Brand, data map[string]any) *models.Brand {
+	var brand models.Brand
+	bs.db.First(&brand)
+	if brand.ID == 0 {
+
+	}
+	return &brand
+}

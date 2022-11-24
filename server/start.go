@@ -9,11 +9,13 @@ import (
 	"persia_atlas/server/websocket/commands"
 )
 
-func init() {
-	boot.LoadEnvironmentVariables()
-}
+//func init() { // causes problem when running test
+//	boot.LoadEnvironmentVariables()
+//}
 
 func Start() {
+	boot.LoadEnvironmentVariables()
+
 	rdb := redis.NewClient(&redis.Options{
 		Addr: "127.0.0.1:6379",
 	})

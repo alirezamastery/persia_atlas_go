@@ -24,8 +24,6 @@ type Server struct {
 }
 
 func (server *Server) connectDatabase() {
-	var err error
-
 	dbURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
@@ -33,6 +31,7 @@ func (server *Server) connectDatabase() {
 		os.Getenv("DB_NAME"),
 		os.Getenv("DB_PASSWORD"),
 	)
+	var err error
 	server.DB, err = gorm.Open(postgres.Open(dbURL), &gorm.Config{
 		CreateBatchSize: 1000,
 	})
