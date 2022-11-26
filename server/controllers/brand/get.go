@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func (bc *BrandController) GetBrands() gin.HandlerFunc {
+func (bc *BrandController) GetBrandsPaginated() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		brands := bc.BrandService.GetBrandsPaginated(c)
 		c.JSON(http.StatusOK, &brands)

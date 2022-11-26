@@ -10,9 +10,11 @@ import (
 	"log"
 	"os"
 	"persia_atlas/server/controllers/brand"
+	ptypecontroller "persia_atlas/server/controllers/product_type"
 	"persia_atlas/server/controllers/user"
 	"persia_atlas/server/models"
 	"persia_atlas/server/services/brand"
+	ptypesrvc "persia_atlas/server/services/product_type"
 	"persia_atlas/server/websocket"
 )
 
@@ -86,9 +88,13 @@ func (server *Server) setupRoutes() {
 	websocket.RegisterRoutes(server.Router, server.DB, server.WsHub, server.RedisDB)
 	user.RegisterRoutes(server.Router, server.DB)
 
-	brandService := brandservice.NewBrandService(server.DB)
+	brandService := brandsrvc.NewBrandService(server.DB)
 	brandController := brandcontroller.NewBrandController(brandService, server.DB)
 	brandController.RegisterRoutes(server.Router)
+
+	ptService := ptypesrvc.NewProductTypeService(server.DB)
+	ptController := ptypecontroller.NewProductTypeController(ptService, server.DB)
+	ptController.RegisterRoutes(server.Router)
 }
 
 func (server *Server) Initialize() {

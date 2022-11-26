@@ -17,7 +17,7 @@ func (bc *BrandController) RegisterRoutes(r *gin.Engine) {
 	routes.Use(middlewares.RequireAuth(bc.DB))
 	{
 		routes.POST("/brands", bc.CreateBrand())
-		routes.GET("/brands", bc.GetBrands())
+		routes.GET("/brands", bc.GetBrandsPaginated())
 		routes.GET("/brands/:id", bc.GetBrandById())
 		routes.PATCH("/brands/:id", bc.UpdateBrand())
 	}

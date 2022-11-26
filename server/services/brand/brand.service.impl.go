@@ -1,4 +1,4 @@
-package brandservice
+package brandsrvc
 
 import (
 	"github.com/gin-gonic/gin"
