@@ -9,8 +9,8 @@ import (
 )
 
 type UpdateProductTypeRequest struct {
-	Title        string `json:"title"`
-	SelectorType uint   `json:"selector_type"`
+	Title        *string `json:"title,omitempty" binding:"omitempty"`
+	SelectorType *uint   `json:"selector_type,omitempty" binding:"omitempty"`
 }
 
 func (ptc *ProductTypeController) UpdateProductType() gin.HandlerFunc {
@@ -28,6 +28,7 @@ func (ptc *ProductTypeController) UpdateProductType() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
+		fmt.Println("body:", body)
 
 		var pt models.ProductType
 		if result := ptc.DB.First(&pt, id); result.Error != nil {
@@ -35,10 +36,21 @@ func (ptc *ProductTypeController) UpdateProductType() gin.HandlerFunc {
 			return
 		}
 
-		ptc.DB.Model(&pt).Updates(models.ProductType{
-			Title:          body.Title,
-			SelectorTypeID: body.SelectorType,
-		})
+		payload := make(map[string]any)
+		if body.Title != nil {
+			payload["Title"] = *body.Title
+		}
+		if body.SelectorType != nil {
+			selectorType := models.VariantSelectorType{}
+			ptc.DB.First(&selectorType, body.SelectorType)
+			if selectorType.ID == 0 {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "selector type not found"})
+				return
+			}
+			payload["SelectorTypeID"] = *body.SelectorType
+		}
+
+		ptc.DB.Model(&pt).Updates(payload)
 
 		c.JSON(http.StatusOK, &pt)
 	}
