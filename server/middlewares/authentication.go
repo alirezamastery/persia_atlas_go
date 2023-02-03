@@ -2,16 +2,16 @@ package middlewares
 
 import (
 	"fmt"
-	"net/http"
-	"os"
-	"strings"
-	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"gorm.io/gorm"
+	"net/http"
+	"os"
 	"persia_atlas/server/auth"
+	"persia_atlas/server/db/rawsql"
 	"persia_atlas/server/models"
+	"strings"
+	"time"
 )
 
 func RequireAuth(db *gorm.DB) gin.HandlerFunc {
@@ -31,7 +31,8 @@ func RequireAuth(db *gorm.DB) gin.HandlerFunc {
 				c.AbortWithStatus(http.StatusUnauthorized)
 			}
 			var user models.User
-			db.Preload("Profile").First(&user, "id = ?", claims["user_id"])
+			//db.Preload("Profile").First(&user, "id = ?", claims["user_id"]) // 2 queries
+			db.Raw(rawsql.SqlUserWithProfile, claims["user_id"]).Scan(&user) // 1 query
 			if user.ID == 0 {
 				c.AbortWithStatus(http.StatusUnauthorized)
 				return

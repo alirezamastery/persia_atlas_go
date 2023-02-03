@@ -12,7 +12,8 @@ type ActualProduct struct {
 	Title     string `gorm:"size:255" json:"title"`
 	PriceStep uint   `gorm:"default:500" json:"price_step"`
 	BrandID   uint
-	Variants  []ProductVariant
+	Brand     Brand `json:"brand"`
+	Variants  []Variant
 }
 
 type Product struct {
@@ -21,14 +22,16 @@ type Product struct {
 	Title    string `gorm:"size:255" json:"title"`
 	IsActive bool   `gorm:"default:true" json:"is_active"`
 	TypeID   uint
-	Variants []ProductVariant
+	Type     ProductType `json:"type"`
+	Variants []Variant
 }
 
 type ProductType struct {
-	ID             uint      `gorm:"primaryKey" json:"id"`
-	Title          string    `gorm:"size:255" json:"title"`
-	Products       []Product `gorm:"foreignKey:TypeID"`
-	SelectorTypeID uint
+	ID             uint                `gorm:"primaryKey" json:"id"`
+	Title          string              `gorm:"size:255" json:"title"`
+	Products       []Product           `gorm:"foreignKey:TypeID"`
+	SelectorTypeID uint                `json:"selector_type_id"`
+	SelectorType   VariantSelectorType `json:"selector_type"`
 }
 
 type VariantSelectorType struct {
@@ -44,17 +47,21 @@ type VariantSelector struct {
 	Value          string  `gorm:"size:255;unique" json:"value"`
 	ExtraInfo      *string `gorm:"size:255" json:"extra_info"`
 	SelectorTypeID uint
-	Variants       []ProductVariant `gorm:"foreignKey:SelectorID"`
+	SelectorType   VariantSelectorType `json:"selector_type"`
+	Variants       []Variant           `gorm:"foreignKey:SelectorID"`
 }
 
-type ProductVariant struct {
-	ID              uint `gorm:"primaryKey" json:"id"`
-	DKPC            uint `gorm:"unique" json:"dkpc"`
-	PriceMin        uint `json:"price_min"`
-	StopLoss        uint `json:"stop_loss"`
-	IsActive        bool `gorm:"default:true" json:"is_active"`
-	HasCompetition  bool `gorm:"default:true" json:"has_competition"`
+type Variant struct {
+	ID              uint  `gorm:"primaryKey" json:"id"`
+	DKPC            uint  `gorm:"unique" json:"dkpc"`
+	PriceMin        uint  `json:"price_min"`
+	StopLoss        *uint `gorm:"default:0" json:"stop_loss"`
+	IsActive        *bool `gorm:"default:true" json:"is_active"`
+	HasCompetition  bool  `gorm:"default:true" json:"has_competition"`
 	ProductID       uint
+	Product         Product
 	SelectorID      uint
+	Selector        VariantSelector
 	ActualProductID uint
+	ActualProduct   ActualProduct
 }

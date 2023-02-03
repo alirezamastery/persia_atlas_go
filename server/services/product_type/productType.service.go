@@ -10,5 +10,4 @@ type ProductTypeService interface {
 	CreateProductType(brand *models.ProductType) error
 	GetProductTypesPaginated(c *gin.Context) *pagination.PaginatedResponse
 	GetProductTypeById(id uint) *models.ProductType
-	//UpdateBrand(id uint) *models.Brand
 }

@@ -28,9 +28,9 @@ func (bs *BrandServiceImpl) GetBrandsPaginated(c *gin.Context) *pagination.Pagin
 
 	var scopes []func(*gorm.DB) *gorm.DB
 
-	if titleQuery := c.Query("title"); titleQuery != "" {
+	if titleQuery := c.Query("search"); titleQuery != "" {
 		scopes = append(scopes, func(db *gorm.DB) *gorm.DB {
-			return db.Where("title LIKE ?", "%"+titleQuery+"%")
+			return db.Where("title ILIKE ?", "%"+titleQuery+"%")
 		})
 	}
 

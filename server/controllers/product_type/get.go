@@ -8,8 +8,8 @@ import (
 
 func (ptc *ProductTypeController) GetProductTypesPaginated() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		brands := ptc.ProductTypeService.GetProductTypesPaginated(c)
-		c.JSON(http.StatusOK, &brands)
+		productTypes := ptc.ProductTypeService.GetProductTypesPaginated(c)
+		c.JSON(http.StatusOK, &productTypes)
 	}
 }
 

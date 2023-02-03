@@ -17,7 +17,7 @@ var (
 
 type PageNumberPagination struct {
 	ctx      *gin.Context
-	db       *gorm.DB
+	dbChain  *gorm.DB
 	scopes   []func(*gorm.DB) *gorm.DB
 	lst      any
 	count    int64
@@ -37,15 +37,15 @@ type PaginatedResponse struct {
 
 func NewPageNumberPaginator(
 	ctx *gin.Context,
-	db *gorm.DB,
+	dbChain *gorm.DB,
 	scopes []func(*gorm.DB) *gorm.DB,
 	lst any,
 ) *PageNumberPagination {
 	return &PageNumberPagination{
-		ctx:    ctx,
-		db:     db,
-		scopes: scopes,
-		lst:    lst,
+		ctx:     ctx,
+		dbChain: dbChain,
+		scopes:  scopes,
+		lst:     lst,
 	}
 }
 
@@ -83,11 +83,13 @@ func (p *PageNumberPagination) getPaginationScope() func(db *gorm.DB) *gorm.DB {
 }
 
 func (p *PageNumberPagination) performQuery() {
-	p.db.Scopes(p.scopes...).Find(p.lst)
+	//p.db.Scopes(p.scopes...).Find(p.lst)
+	p.dbChain.Scopes(p.scopes...).Find(p.lst)
 }
 
 func (p *PageNumberPagination) getCount() {
-	p.db.Scopes(p.scopes...).Find(p.lst).Count(&p.count)
+	//p.db.Scopes(p.scopes...).Find(p.lst).Count(&p.count)
+	p.dbChain.Scopes(p.scopes...).Find(p.lst).Count(&p.count)
 }
 
 func (p *PageNumberPagination) getPageNumber() int {

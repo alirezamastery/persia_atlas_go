@@ -7,15 +7,15 @@ import (
 	"persia_atlas/server/pagination"
 )
 
+type ProductTypeServiceImpl struct {
+	db *gorm.DB
+	//ctx context.Context
+}
+
 func NewProductTypeService(db *gorm.DB) ProductTypeService {
 	return &ProductTypeServiceImpl{
 		db: db,
 	}
-}
-
-type ProductTypeServiceImpl struct {
-	db *gorm.DB
-	//ctx context.Context
 }
 
 func (bs *ProductTypeServiceImpl) CreateProductType(pt *models.ProductType) error {
@@ -28,9 +28,9 @@ func (bs *ProductTypeServiceImpl) GetProductTypesPaginated(c *gin.Context) *pagi
 
 	var scopes []func(*gorm.DB) *gorm.DB
 
-	if titleQuery := c.Query("title"); titleQuery != "" {
+	if searchQuery := c.Query("search"); searchQuery != "" {
 		scopes = append(scopes, func(db *gorm.DB) *gorm.DB {
-			return db.Where("title LIKE ?", "%"+titleQuery+"%")
+			return db.Where("title LIKE ?", "%"+searchQuery+"%")
 		})
 	}
 
