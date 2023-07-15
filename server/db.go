@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"log"
 	"os"
 	"persia_atlas/server/models"
@@ -21,7 +20,7 @@ func (server *Server) connectDatabase() {
 	var err error
 	server.DB, err = gorm.Open(postgres.Open(dbURL), &gorm.Config{
 		CreateBatchSize: 1000,
-		Logger:          logger.Default.LogMode(logger.Info),
+		//Logger:          logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
 		log.Fatalln("error in connecting to database:", err)

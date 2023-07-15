@@ -114,9 +114,17 @@ func (vs VariantServiceImpl) GetVariantById(id uint) *network.VariantSerializer 
 	//	Table("variants").
 	//	Select("p.id").
 	//	Joins("INNER JOIN products as p on variants.product_id = p.id").
-	//	First(&vTest, id) // you may as well right raw sql!
+	//	First(&vTest, id) // you may as well write raw sql!
 	vs.db.Raw(rawsql.SqlVariant, id).Scan(&vTest) // scan doesn't work with nested structs
-	fmt.Println("variant serializer:", vTest)
+	fmt.Println("variant serializer       :", vTest)
+
+	var nested network.VariantSerializerNested
+	vs.db.Raw(rawsql.SqlVariant, id).Scan(&nested)
+	fmt.Println("variant serializer nested:", nested)
+
+	var result map[string]any
+	vs.db.Raw(rawsql.SqlVariant, id).Scan(&result)
+	fmt.Println("variant map:", result)
 
 	return &variantSerializer
 }

@@ -21,6 +21,11 @@ SELECT
   , vs.digikala_id AS "Selector__digikala_id"
   , vs.value       AS "Selector__value"
   , vs.extra_info  AS "Selector__extra_info"
+  , ap.id          AS ActualProduct__id
+  , ap.title       AS ActualProduct__title
+  , ap.price_step  AS ActualProduct__price_step
+  , b.id           AS ActualProduct__Brand__id
+  , b.title        AS ActualProduct__Brand__title
 FROM
     variants                          AS v
     INNER JOIN products               AS p
