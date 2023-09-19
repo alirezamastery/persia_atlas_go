@@ -1,8 +1,8 @@
 package variantsrvc
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/kr/pretty"
 	"golang.org/x/exp/slices"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -105,9 +105,9 @@ func (vs VariantServiceImpl) GetVariantById(id uint) *network.VariantSerializer 
 		Preload("ActualProduct.Brand").
 		Preload(clause.Associations).
 		First(&variantSerializer, id) // Preload runs separate query for each table!
-	if variantSerializer.ID == 0 {
-		return nil
-	}
+	//if variantSerializer.ID == 0 {
+	//	return nil
+	//}
 
 	var vTest network.VariantSerializer
 	//vs.db.
@@ -116,15 +116,25 @@ func (vs VariantServiceImpl) GetVariantById(id uint) *network.VariantSerializer 
 	//	Joins("INNER JOIN products as p on variants.product_id = p.id").
 	//	First(&vTest, id) // you may as well write raw sql!
 	vs.db.Raw(rawsql.SqlVariant, id).Scan(&vTest) // scan doesn't work with nested structs
-	fmt.Println("variant serializer       :", vTest)
+	pretty.Println("variant to VariantSerializer:", vTest)
 
 	var nested network.VariantSerializerNested
 	vs.db.Raw(rawsql.SqlVariant, id).Scan(&nested)
-	fmt.Println("variant serializer nested:", nested)
+	pretty.Println("variant to serializer nested:", nested)
 
 	var result map[string]any
 	vs.db.Raw(rawsql.SqlVariant, id).Scan(&result)
-	fmt.Println("variant map:", result)
+	pretty.Println("variant to map:", result)
 
-	return &variantSerializer
+	var result2 network.VariantScanner
+	vs.db.Raw(rawsql.SqlVariant, id).Scan(&result2)
+	pretty.Println("variant to VariantScanner:", result2)
+	if result2.Id == 0 {
+		return nil
+	}
+	pretty.Println("variant to Serialize:", result2.Serialize()) // <-- BEST SOLUTION SO FAR
+	var res = result2.Serialize()
+
+	//return &variantSerializer
+	return &res
 }
