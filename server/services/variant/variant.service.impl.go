@@ -1,6 +1,7 @@
 package variantsrvc
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/kr/pretty"
 	"golang.org/x/exp/slices"
@@ -123,7 +124,7 @@ func (vs VariantServiceImpl) GetVariantById(id uint) *network.VariantSerializer 
 	pretty.Println("variant to serializer nested:", nested)
 
 	var result map[string]any
-	vs.db.Raw(rawsql.SqlVariant, id).Scan(&result)
+	vs.db.Raw(rawsql.SqlVariantNoName, id).Scan(&result)
 	pretty.Println("variant to map:", result)
 
 	var result2 network.VariantScanner
@@ -132,9 +133,39 @@ func (vs VariantServiceImpl) GetVariantById(id uint) *network.VariantSerializer 
 	if result2.Id == 0 {
 		return nil
 	}
-	pretty.Println("variant to Serialize:", result2.Serialize()) // <-- BEST SOLUTION SO FAR
-	var res = result2.Serialize()
+	var res2 = result2.Serialize()
+	pretty.Println("variant to Serialize:", res2)
+
+	var result3 network.VariantScannerGoConvention
+	vs.db.Raw(rawsql.SqlVariant2, id).Scan(&result3)
+	pretty.Println("variant to VariantScannerGoConvention:", result3)
+	var res3 = result3.Serialize()
+	pretty.Println("VariantScannerGoConvention to Serialize:", res3) // <-- BEST SOLUTION SO FAR
+
+	tt := vs.db.Raw(rawsql.SqlVariantNoName, id)
+	rows, _ := tt.Rows()
+	cols, _ := rows.Columns()
+	colTypes, _ := rows.ColumnTypes()
+	fmt.Println("cols:", cols)
+	fmt.Println("column types:", colTypes[0].Name())
+	fmt.Println("column types:", colTypes[0].DatabaseTypeName())
+	for rows.Next() {
+		columns := make([]any, len(cols))
+		columnPointers := make([]any, len(cols))
+		for i, _ := range columns {
+			columnPointers[i] = &columns[i]
+		}
+
+		rows.Scan(columnPointers...)
+
+		for _, colName := range cols {
+			// value is in columns[i] of interface type.
+			// How to extract it from here?
+			// ....
+			fmt.Println("col name:", colName)
+		}
+	}
 
 	//return &variantSerializer
-	return &res
+	return &res3
 }

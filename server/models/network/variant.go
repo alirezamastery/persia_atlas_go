@@ -204,3 +204,80 @@ func (s *VariantScanner) Serialize() VariantSerializer {
 		},
 	}
 }
+
+type VariantScannerGoConvention struct {
+	Id                     uint
+	Dkpc                   uint
+	ProductId              uint
+	StopLoss               uint
+	PriceMin               uint
+	IsActive               bool
+	HasCompetition         bool
+	ProductDkp             string
+	ProductTitle           string
+	ProductIsActive        bool
+	ProductTypeId          uint
+	ProductTypeTitle       string
+	SelectorTypeId         uint
+	SelectorTypeTitle      string
+	SelectorId             uint
+	SelectorDigikalaId     uint
+	SelectorValue          string
+	SelectorExtraInfo      *string
+	ActualProductId        uint
+	ActualProductTitle     string
+	ActualProductPriceStep uint
+	BrandId                uint
+	BrandTitle             string
+}
+
+func (s *VariantScannerGoConvention) Serialize() VariantSerializer {
+	return VariantSerializer{
+		ID:             s.Id,
+		DKPC:           s.Dkpc,
+		PriceMin:       s.PriceMin,
+		StopLoss:       s.StopLoss,
+		IsActive:       s.IsActive,
+		HasCompetition: s.HasCompetition,
+		ProductID:      s.ProductId,
+		Product: product{
+			ID:       s.ProductId,
+			DKP:      s.ProductDkp,
+			Title:    s.ProductTitle,
+			IsActive: s.ProductIsActive,
+			TypeID:   s.ProductTypeId,
+			Type: productType{
+				ID:             s.ProductTypeId,
+				Title:          s.ProductTypeTitle,
+				SelectorTypeID: s.SelectorTypeId,
+				SelectorType: variantSelectorType{
+					ID:    s.SelectorTypeId,
+					Title: s.SelectorTypeTitle,
+				},
+			},
+		},
+		SelectorID: s.SelectorId,
+		Selector: variantSelector{
+			ID:             s.SelectorId,
+			DigikalaId:     s.SelectorDigikalaId,
+			Value:          s.SelectorValue,
+			ExtraInfo:      s.SelectorExtraInfo,
+			SelectorTypeID: s.SelectorTypeId,
+			SelectorType: variantSelectorType{
+				ID:    s.SelectorTypeId,
+				Title: s.SelectorTypeTitle,
+			},
+		},
+		ActualProductID: s.ActualProductId,
+		ActualProduct: actualProduct{
+			ID:        s.ActualProductId,
+			Title:     s.ActualProductTitle,
+			PriceStep: s.ActualProductPriceStep,
+			BrandID:   s.BrandId,
+			Brand: brand{
+				ID:    s.BrandId,
+				Title: s.BrandTitle,
+			},
+		},
+	}
+}
